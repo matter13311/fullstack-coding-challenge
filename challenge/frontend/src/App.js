@@ -1,25 +1,29 @@
 import React from 'react';
-import logo from './logo.svg';
+import { AuthProvider, useAuth } from './AuthContext';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Dashboard from './components/Dashboard.js';
+import Login from './components/Login.js';
 import './App.css';
+
+const AppContent = () => {
+  const { authToken } = useAuth(); // Access authToken from AuthContext
+
+  return (
+    <Routes>
+      <Route path="/" element={authToken ? <Dashboard /> : <Login />} />
+    </Routes>
+  );
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthProvider>
+      <BrowserRouter>
+        <div>
+          <AppContent />
+        </div>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
