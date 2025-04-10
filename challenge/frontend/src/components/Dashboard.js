@@ -8,10 +8,19 @@ const Dashboard = () => {
   const [openComplaints, setOpenComplaints] = useState([]); // State to store open complaints
   const [closedComplaints, setClosedComplaints] = useState([]); // State to store closed complaints
   const [topComplaints, setTopComplaints] = useState([]); // State to store top complaints
-  const [constituentsView, setConstituentsView] = useState([]); // State to store constituents view data
+  const [constituentComplaints, setConstituentComplaints] = useState([]); // State to store constituent complaints
   const [error, setError] = useState(''); // State to store error messages
   const [loading, setLoading] = useState(true); // State to track loading status
-  const [isConstituentView, setIsConstituentView] = useState(false); // State to track the current view
+  const [activeTab, setActiveTab] = useState('allComplaints'); // State to track the active tab
+
+  // Array of tab information
+  const tabs = [
+    { name: 'All Complaints', key: 'allComplaints' },
+    { name: 'Open Complaints', key: 'openComplaints' },
+    { name: 'Closed Complaints', key: 'closedComplaints' },
+    { name: 'Top Complaints', key: 'topComplaints' },
+    { name: 'Constituent Complaints', key: 'constituentComplaints' },
+  ];
 
   // Fetch complaints when the component loads
   useEffect(() => {
@@ -34,8 +43,8 @@ const Dashboard = () => {
         setTopComplaints(topComplaintsData);
 
         // Fetch constituent complaints
-        const constituentsViewData = await api.get('constituentComplaints');
-        setConstituentsView(constituentsViewData);
+        const constituentData = await api.get('constituentComplaints');
+        setConstituentComplaints(constituentData);
 
         setLoading(false); // Set loading to false after all data is fetched
       } catch (err) {
@@ -53,9 +62,9 @@ const Dashboard = () => {
 
   // Reusable function to render a table
   const renderTable = (title, data) => (
-    <div className="bg-blue-500 text-white p-4" >
-      <h2>{title}</h2>
-      <table border="1" style={{ width: '100%', borderCollapse: 'collapse' }}>
+    <div>
+      <h2 className="table-title">{title}</h2>
+      <table className="complaints-table">
         <thead>
           <tr>
             <th>Unique Key</th>
@@ -94,8 +103,8 @@ const Dashboard = () => {
 
   const renderTopComplaints = (title, data) => (
     <div>
-      <h2>{title}</h2>
-      <table border="1" style={{ width: '100%', borderCollapse: 'collapse' }}>
+      <h2 className="table-title">{title}</h2>
+      <table className="complaints-table">
         <thead>
           <tr>
             <th>Complaint Type</th>
@@ -115,27 +124,38 @@ const Dashboard = () => {
   );
 
   return (
-    <div>
-      <h1>Welcome to the Dashboard</h1>
-      <button onClick={handleLogout}>Logout</button> {/* Logout button */}
-      <button onClick={() => setIsConstituentView(!isConstituentView)}>
-        {isConstituentView ? 'View All Complaints' : 'View Constituent Complaints'}
+    <div className="dashboard">
+      <h1 className="dashboard-title">Welcome to the Dashboard</h1>
+      <button className="logout-button" onClick={handleLogout}>
+        Logout
       </button>
 
-      {loading && <p>Loading complaints...</p>} {/* Show loading message */}
-      {error && <p style={{ color: 'red' }}>{error}</p>} {/* Show error message */}
+      {loading && <p className="loading-message">Loading complaints...</p>}
+      {error && <p className="error-message">{error}</p>}
       {!loading && !error && (
         <div>
-          {isConstituentView
-            ? renderTable('Constituent Complaints', constituentsView)
-            : (
-              <>
-                {renderTable('All Complaints', allComplaints)}
-                {renderTable('Open Complaints', openComplaints)}
-                {renderTable('Closed Complaints', closedComplaints)}
-                {renderTopComplaints('Top 3 Complaints', topComplaints)}
-              </>
-            )}
+          {/* Tabs */}
+          <div className="tabs-container">
+            {tabs.map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={`tab-button ${
+                  activeTab === tab.key ? 'active-tab' : ''
+                }`}
+              >
+                {tab.name}
+              </button>
+            ))}
+          </div>
+
+          {/* Render the active tab */}
+          {activeTab === 'allComplaints' && renderTable('All Complaints', allComplaints)}
+          {activeTab === 'openComplaints' && renderTable('Open Complaints', openComplaints)}
+          {activeTab === 'closedComplaints' && renderTable('Closed Complaints', closedComplaints)}
+          {activeTab === 'topComplaints' && renderTopComplaints('Top 3 Complaints', topComplaints)}
+          {activeTab === 'constituentComplaints' &&
+            renderTable('Constituent Complaints', constituentComplaints)}
         </div>
       )}
     </div>
