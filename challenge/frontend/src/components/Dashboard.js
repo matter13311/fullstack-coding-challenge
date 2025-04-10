@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../AuthContext.js'; // Import the useAuth hook to access authentication context
 import { api } from '../util/api.js'; // Import the centralized API utility
+import './Dashboard.css'; // Import the CSS file for styling
 
 const Dashboard = () => {
   const { logout } = useAuth(); // Access the logout function from AuthContext
@@ -52,7 +53,6 @@ const Dashboard = () => {
         setLoading(false); // Set loading to false even if there's an error
       }
     };
-
     fetchData(); // Call the function to fetch complaints
   }, []); // Empty dependency array ensures this runs only once when the component mounts
 
@@ -63,7 +63,6 @@ const Dashboard = () => {
   // Reusable function to render a table
   const renderTable = (title, data) => (
     <div>
-      <h2 className="table-title">{title}</h2>
       <table className="complaints-table">
         <thead>
           <tr>
@@ -125,29 +124,39 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard">
-      <h1 className="dashboard-title">Welcome to the Dashboard</h1>
-      <button className="logout-button" onClick={handleLogout}>
-        Logout
-      </button>
+      {/* Navbar */}
+      <nav className="navbar">
+        <a href="/" className="navbar-logo">
+          <img
+            alt="NYC Council Seal"
+            src="https://council.nyc.gov/wp-content/themes/wp-nycc/assets/images/nyc-seal-blue.png"
+          />
+          <div className="navbar-text">New York City Council</div>
+        </a>
+        <button className="logout-button" onClick={handleLogout}>
+          Logout
+        </button>
+      </nav>
 
       {loading && <p className="loading-message">Loading complaints...</p>}
       {error && <p className="error-message">{error}</p>}
       {!loading && !error && (
         <div>
           {/* Tabs */}
-          <div className="tabs-container">
+          <ul className="tabs-container">
             {tabs.map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => setActiveTab(tab.key)}
-                className={`tab-button ${
-                  activeTab === tab.key ? 'active-tab' : ''
-                }`}
-              >
-                {tab.name}
-              </button>
+              <li key={tab.key} className="tab-item">
+                <button
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`tab-button ${
+                    activeTab === tab.key ? 'active-tab' : ''
+                  }`}
+                >
+                  {tab.name}
+                </button>
+              </li>
             ))}
-          </div>
+          </ul>
 
           {/* Render the active tab */}
           {activeTab === 'allComplaints' && renderTable('All Complaints', allComplaints)}

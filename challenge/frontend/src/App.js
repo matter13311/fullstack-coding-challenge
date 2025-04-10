@@ -6,8 +6,9 @@ import Login from './components/Login.js';
 import './App.css';
 
 const AppContent = () => {
-  const { authToken } = useAuth(); // Access authToken from AuthContext
+  const { authToken, loading } = useAuth(); // Access authToken from AuthContext
 
+  console.log("app.js authToken: ", authToken);
   return (
     <Routes>
       <Route path="/" element={authToken ? <Dashboard /> : <Login />} />
@@ -19,9 +20,7 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <div>
           <AppContent />
-        </div>
       </BrowserRouter>
     </AuthProvider>
   );

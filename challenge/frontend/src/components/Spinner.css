@@ -1,0 +1,27 @@
+.spinner {
+    width: 18px;
+    height: 18px;
+    border: 3px solid #3498db;
+    border-top: 3px solid #eff4f9;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  
+    /* 
+    animation-name: spin;
+    animation-duration: 1s;
+    animation-timing-function: linear;  Timing function for the animation 
+    animation-iteration-count: infinite;  The number of times the animation will repeat  
+    */
+    
+    margin-right: 8px;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+  
+    100% {
+      transform: rotate(360deg);
+    }
+  }

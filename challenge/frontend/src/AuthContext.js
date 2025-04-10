@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // when authToken changes, update localStorage
     if (authToken) {
+      console.log("setting authToken", authToken);
       localStorage.setItem('authToken', authToken);
     } else {
       localStorage.removeItem('authToken');
@@ -31,8 +32,10 @@ export const AuthProvider = ({ children }) => {
         throw new Error(errorData.message || 'Login failed');
       }
 
+      console.log("logging in and fetching token...");
       const data = await response.json();
       setAuthToken(data.token); 
+      localStorage.setItem('authToken', data.token);
       return { success: true };
     } catch (error) {
       return { success: false, message: error.message };

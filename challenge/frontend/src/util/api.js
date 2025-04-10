@@ -15,6 +15,7 @@ const getRequest = async (endpoint) => {
 
 
   const token = getToken();
+  console.log("token: ", token);
   if (token) {
     headers["Authorization"] = `Token ${token}`;
   }
@@ -23,6 +24,8 @@ const getRequest = async (endpoint) => {
     method: "GET",
     headers,
   };
+
+  console.log('config: ', config);
 
   const response = await fetch(`${BASE_URL}${endpoint}`, config);
   const data = await response.json();
