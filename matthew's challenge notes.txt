@@ -1,6 +1,6 @@
 1. Learned some Django and familiarized myself about ORM
 2. setup virtual environment
-3. Analyzed database structure and rows
+3. Analyzed database structure and rows using DB Browser for SQLite
 4. Had to install corsheaders to get around CORS error when calling API from frontend
 5. installed react-router-dom for routing.
 6. using react context to handle user-authenthication state
@@ -11,8 +11,7 @@
 
 TODO
 1. Create spinning loader component
-2. Create skeleton component
 3. Add spinning loader component to logging in request.
 4. Implement UI Framework?
-5. Design better table
+5. Design better dashboard table
 6. Work on /topComplaints/
