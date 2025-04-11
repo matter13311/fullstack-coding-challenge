@@ -1,130 +1,131 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../AuthContext.js'; // Import the useAuth hook to access authentication context
-import { api } from '../util/api.js'; // Import the centralized API utility
-import './Dashboard.css'; // Import the CSS file for styling
+import { useAuth } from '../AuthContext.js'; 
+import { api } from '../util/api.js';
+import './Dashboard.css';
 
 const Dashboard = () => {
-  const { logout } = useAuth(); // Access the logout function from AuthContext
-  const [allComplaints, setAllComplaints] = useState([]); // State to store all complaints
-  const [openComplaints, setOpenComplaints] = useState([]); // State to store open complaints
-  const [closedComplaints, setClosedComplaints] = useState([]); // State to store closed complaints
-  const [topComplaints, setTopComplaints] = useState([]); // State to store top complaints
-  const [constituentComplaints, setConstituentComplaints] = useState([]); // State to store constituent complaints
-  const [error, setError] = useState(''); // State to store error messages
-  const [loading, setLoading] = useState(true); // State to track loading status
-  const [activeTab, setActiveTab] = useState('allComplaints'); // State to track the active tab
+  const { logout } = useAuth(); 
+  const [allComplaints, setAllComplaints] = useState([]);
+  const [openComplaints, setOpenComplaints] = useState([]); 
+  const [closedComplaints, setClosedComplaints] = useState([]);
+  const [topComplaints, setTopComplaints] = useState([]);
+  const [constituentComplaints, setConstituentComplaints] = useState([]); 
+  const [error, setError] = useState(''); 
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('allComplaints'); 
 
-  // Array of tab information
+  // array of tab information
   const tabs = [
-    { name: 'All Complaints', key: 'allComplaints' },
-    { name: 'Open Complaints', key: 'openComplaints' },
-    { name: 'Closed Complaints', key: 'closedComplaints' },
-    { name: 'Top Complaints', key: 'topComplaints' },
-    { name: 'Constituent Complaints', key: 'constituentComplaints' },
+    { name: 'All Complaints', key: 'allComplaints', data: allComplaints },
+    { name: 'Open Complaints', key: 'openComplaints', data: openComplaints },
+    { name: 'Closed Complaints', key: 'closedComplaints', data: closedComplaints },
+    { name: 'Top Complaints', key: 'topComplaints', data: topComplaints },
+    { name: 'Constituent Complaints', key: 'constituentComplaints', data: constituentComplaints },
   ];
 
-  // Fetch complaints when the component loads
+  // fetch all complaints as soon as page loads
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch all complaints
         const allData = await api.get('allComplaints');
         setAllComplaints(allData);
 
-        // Fetch open complaints
         const openData = await api.get('openCases');
         setOpenComplaints(openData);
 
-        // Fetch closed complaints
         const closedData = await api.get('closedCases');
         setClosedComplaints(closedData);
 
-        // Fetch top 3 complaints
         const topComplaintsData = await api.get('topComplaints');
         setTopComplaints(topComplaintsData);
 
-        // Fetch constituent complaints
         const constituentData = await api.get('constituentComplaints');
         setConstituentComplaints(constituentData);
 
-        setLoading(false); // Set loading to false after all data is fetched
+        setLoading(false); 
       } catch (err) {
-        setError(err.message); // Set error message if any request fails
-        setLoading(false); // Set loading to false even if there's an error
+        setError(err.message); 
+        setLoading(false); 
       }
     };
-    fetchData(); // Call the function to fetch complaints
-  }, []); // Empty dependency array ensures this runs only once when the component mounts
+    fetchData(); 
+  }, []); 
 
   const handleLogout = () => {
-    logout(); // Call the logout function to clear the authToken
+    logout(); 
   };
 
-  // Reusable function to render a table
-  const renderTable = (title, data) => (
+  const renderTable = (data) => (
     <div>
-      <table className="complaints-table">
-        <thead>
-          <tr>
-            <th>Unique Key</th>
-            <th>Account</th>
-            <th>Open Date</th>
-            <th>Complaint Type</th>
-            <th>Descriptor</th>
-            <th>ZIP</th>
-            <th>Borough</th>
-            <th>City</th>
-            <th>Council District</th>
-            <th>Community Board</th>
-            <th>Close Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((complaint) => (
-            <tr key={complaint.unique_key}>
-              <td>{complaint.unique_key}</td>
-              <td>{complaint.account}</td>
-              <td>{complaint.opendate}</td>
-              <td>{complaint.complaint_type}</td>
-              <td>{complaint.descriptor}</td>
-              <td>{complaint.zip}</td>
-              <td>{complaint.borough}</td>
-              <td>{complaint.city}</td>
-              <td>{complaint.council_dist}</td>
-              <td>{complaint.community_board}</td>
-              <td>{complaint.closedate}</td>
+      {data.length === 0 ? (
+        <p className="no-rows-message">No rows available for this table.</p>
+      ) : (
+        <table className="complaints-table">
+          <thead>
+            <tr>
+              <th>Unique Key</th>
+              <th>Account</th>
+              <th>Open Date</th>
+              <th>Complaint Type</th>
+              <th>Descriptor</th>
+              <th>ZIP</th>
+              <th>Borough</th>
+              <th>City</th>
+              <th>Council District</th>
+              <th>Community Board</th>
+              <th>Close Date</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data.map((complaint) => (
+              <tr key={complaint.unique_key}>
+                <td>{complaint.unique_key}</td>
+                <td>{complaint.account}</td>
+                <td>{complaint.opendate}</td>
+                <td>{complaint.complaint_type}</td>
+                <td>{complaint.descriptor}</td>
+                <td>{complaint.zip}</td>
+                <td>{complaint.borough}</td>
+                <td>{complaint.city}</td>
+                <td>{complaint.council_dist}</td>
+                <td>{complaint.community_board}</td>
+                <td>{complaint.closedate}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 
   const renderTopComplaints = (title, data) => (
     <div>
       <h2 className="table-title">{title}</h2>
-      <table className="complaints-table">
-        <thead>
-          <tr>
-            <th>Complaint Type</th>
-            <th>Count</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((complaint, index) => (
-            <tr key={index}>
-              <td>{complaint.complaint_type}</td>
-              <td>{complaint.count}</td>
+      {data.length === 0 ? (
+        <p className="no-rows-message">No rows available for this table.</p>
+      ) : (
+        <table className="complaints-table">
+          <thead>
+            <tr>
+              <th>Complaint Type</th>
+              <th>Count</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data.map((complaint, index) => (
+              <tr key={index}>
+                <td>{complaint.complaint_type}</td>
+                <td>{complaint.count}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 
   return (
     <div className="dashboard">
-      {/* Navbar */}
       <nav className="navbar">
         <a href="/" className="navbar-logo">
           <img
@@ -152,19 +153,19 @@ const Dashboard = () => {
                     activeTab === tab.key ? 'active-tab' : ''
                   }`}
                 >
-                  {tab.name}
+                  {tab.name} ({tab.data.length})
                 </button>
               </li>
             ))}
           </ul>
 
           {/* Render the active tab */}
-          {activeTab === 'allComplaints' && renderTable('All Complaints', allComplaints)}
-          {activeTab === 'openComplaints' && renderTable('Open Complaints', openComplaints)}
-          {activeTab === 'closedComplaints' && renderTable('Closed Complaints', closedComplaints)}
+          {activeTab === 'allComplaints' && renderTable(allComplaints)}
+          {activeTab === 'openComplaints' && renderTable(openComplaints)}
+          {activeTab === 'closedComplaints' && renderTable(closedComplaints)}
           {activeTab === 'topComplaints' && renderTopComplaints('Top 3 Complaints', topComplaints)}
           {activeTab === 'constituentComplaints' &&
-            renderTable('Constituent Complaints', constituentComplaints)}
+            renderTable(constituentComplaints)}
         </div>
       )}
     </div>

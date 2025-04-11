@@ -1,38 +1,37 @@
 import React, { useState } from 'react';
 import { useAuth } from '../AuthContext.js'; 
 import Spinner from './Spinner.js';
-import './Login.css'; // Import the CSS file for styling
-
+import './Login.css'; 
 const Login = () => {
   const { login } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false); // State to track loading status
+  const [loading, setLoading] = useState(false); 
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
-    setLoading(true); // Show spinner
+    setLoading(true); 
 
-    // Simple frontend validation
+    // frontend validation for empty username or password
     if (!username || !password) {
       setError('Both username and password are required.');
       setLoading(false); // Hide spinner
       return;
     }
 
-    const result = await login(username, password); // Call the login function from AuthContext
+    const result = await login(username, password); 
 
     if (!result.success) {
-      setLoading(false); // Hide spinner
+      setLoading(false); 
       if (result.message.password) {
-        setError(result.message.password[0]); // Show backend password error
+        setError(result.message.password[0]); // show backend password error
       } else {
-        setError('Invalid username or password.'); // Error for incorrect credentials
+        setError('Invalid username or password.'); // error for incorrect credentials
       }
     } else {
-      setLoading(false); // Hide spinner after successful login
+      setLoading(false);
     }
   };
 
@@ -61,7 +60,7 @@ const Login = () => {
           placeholder="Password"
           className="login-input"
         />
-        {loading && ( // Show spinner only when loading is true
+        {loading && ( 
           <div className="login-spinner">
             <Spinner />
           </div>

@@ -42,7 +42,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => setAuthToken(null); // call this function to log out
+
+  //for the purpose of this challenge, this logout function will simply remove the authToken from clients localStorage.
+  //it will not make a call to the backend to invalidate the token.
+  //in a real world application, we would create a logout endpoint in the backend, which will invalidate the token.
+  const logout = () => setAuthToken(null); 
 
   return (
     <AuthContext.Provider value={{ authToken, login, logout }}>

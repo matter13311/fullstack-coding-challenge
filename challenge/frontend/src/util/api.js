@@ -7,7 +7,7 @@ const getToken = () => {
   return localStorage.getItem("authToken");
 };
 
-// Function to make GET requests
+// reuseable function to make GET requests
 const getRequest = async (endpoint) => {
   const headers = {
     "Content-Type": "application/json",
