@@ -1,3 +1,10 @@
+![Alt Text](https://raw.githubusercontent.com/matter13311/fullstack-coding-challenge/refs/heads/main/readme_images/login_page.png?raw=true)
+
+![Alt Text](https://raw.githubusercontent.com/matter13311/fullstack-coding-challenge/refs/heads/main/readme_images/dashboard_page.png?raw=true)
+
+
+
+
 # New York City Council Full Stack Coding Challenge
 You will have **1 full week** to complete this challenge starting when you received the challenge from our office. You can submit your challenge using our [Google Form](https://forms.gle/HXCXFiVvFAJ3WzAc7).
 
